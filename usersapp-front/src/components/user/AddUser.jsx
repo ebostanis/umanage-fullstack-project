@@ -6,12 +6,12 @@ import { Dialog, DialogContent, DialogContentText, DialogTitle} from '@mui/mater
 
 const api = axios.create({baseURL: process.env.REACT_APP_API_URL});
 
+// Component for adding users 
 const AddUser = () => {
 
-    
-    const navigate = useNavigate();
     const [openSuccessDialog, setOpenSuccessDialog] = useState(false);
-
+    const navigate = useNavigate();
+    
     const[user, setUser] = useState({
         firstName: '',
         lastName: '',
@@ -34,10 +34,11 @@ const AddUser = () => {
         setUser({ ...user, [name]: value });
     };
 
+
     const saveUser = async () => {
         const addresses = [];
         
-        //store addresses depending on the type
+        // Store addresses depending on the type
         if (user.homeAddress.trim() !== '') {
             addresses.push({ type: 'HOME', address: user.homeAddress });
         }
@@ -46,7 +47,7 @@ const AddUser = () => {
             addresses.push({ type: 'WORK', address: user.workAddress });
         }
     
-        //user object after formatting the date and storing the addresses from the form
+        // User object after formatting the date and storing the addresses from the form
         const formattedUser = {
             firstName: user.firstName,
             lastName: user.lastName,
@@ -74,6 +75,7 @@ const AddUser = () => {
     <div className='col-sm-8 py-5 px-5 offset-2 shadow border mt-3' 
             style={{borderRadius: '10px'}}>
         <form onSubmit={(e) => { e.preventDefault(); saveUser(); }}>
+            {/* First Name */}
             <div className='input-group mb-5'>
                 <label
                     className='input-group-text'
@@ -84,12 +86,14 @@ const AddUser = () => {
                     type='text'
                     name='firstName'
                     id='firstName'
-                    pattern='^[a-zA-Z ]*$'
-                    title= "Name can not include numbers"
+                    pattern='^[a-zA-Z]*$'
+                    title= "Name can not include numbers or symbols"
                     required
                     value={firstName}
                     onChange={(e) => handleInputChange(e)}/>
             </div>
+
+            {/* Last Name */}
             <div className='input-group mb-5'>
                 <label
                     className='input-group-text'
@@ -106,6 +110,8 @@ const AddUser = () => {
                     value={lastName}
                     onChange={(e) => handleInputChange(e)}/>
             </div>
+
+            {/* Gender */}
             <div className='input-group mb-5'>
                 <label
                     className='input-group-text'
@@ -123,6 +129,8 @@ const AddUser = () => {
                         <option>F</option>
                 </select>
             </div>
+
+            {/* Birthdate */}
             <div className='input-group mb-5'>
                 <label
                     className='input-group-text'
@@ -137,6 +145,8 @@ const AddUser = () => {
                     value={birthdate}
                     onChange={(e) => handleInputChange(e)}/>
             </div>
+
+            {/* Phone No. */}
             <div className='input-group mb-5'>
                 <label
                     className='input-group-text'
@@ -152,6 +162,8 @@ const AddUser = () => {
                     pattern="[0-9]{10}"
                     title="Enter a 10-digit phone number"/>
             </div>
+
+            {/* Home Address */}
             <div className='input-group mb-5'>
                 <label 
                     className='input-group-text' 
@@ -166,6 +178,8 @@ const AddUser = () => {
                         onChange={handleInputChange}
                         placeholder="Optional"/>
             </div>
+
+            {/* Work Address */}
             <div className='input-group mb-5'>
                 <label 
                     className='input-group-text' 
@@ -192,7 +206,6 @@ const AddUser = () => {
 				<div className="col-sm-2">
 					<Link
 						to={"/"}
-						type="submit"
 						className="btn btn-outline-danger btn-lg">
 						Cancel
 					</Link>

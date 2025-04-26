@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 //User Entity
@@ -17,36 +17,40 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increments primary key
     private Long id;
 
     @NotBlank(message = "First Name is required")
+    @Column(nullable = false)
     private String firstName;
 
     @NotBlank(message = "Last Name is required")
+    @Column(nullable = false)
     private String lastName;
 
     @NotNull(message = "Gender is required")
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @NotNull(message = "Birthdate is required")
+    @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    private Date birthdate;
+    private LocalDate birthdate;
 
     @Column
-    @Size(min = 10, max = 10)
+    @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
     private String phone;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference    //Serializes the User
+    @JsonManagedReference    //JSON Serialization to avoid circular references (stack overflow)
     private List<Address> addresses;
 
     //Constructors, Getters and Setters
     public User(){
     }
 
-    public User(String firstName, String lastName, Gender gender, Date birthdate, String phone, List<Address> addresses){
+    public User(String firstName, String lastName, Gender gender, LocalDate birthdate, String phone, List<Address> addresses){
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
@@ -87,11 +91,11 @@ public class User {
         this.gender = gender;
     }
 
-    public Date getBirthdate(){
+    public LocalDate getBirthdate(){
         return birthdate;
     }
 
-    public void setBirthdate(Date birthdate){
+    public void setBirthdate(LocalDate birthdate){
         this.birthdate = birthdate;
     }
 

@@ -21,7 +21,7 @@ function App() {
             <Route exact path="/users" element={<UsersView/>}></Route>
             <Route exact path="*" element={<NotFoundPage/>}></Route>
             <Route exact path="/add-user" element={<AddUser/>}></Route>
-            <Route exact path="/users/user/:id"element={<UserView/>}></Route>
+            <Route exact path="/users/:id"element={<UserView/>}></Route>
             <Route exact path="/about"element={<AboutPage/>}></Route>
         </Routes>
       </Router>

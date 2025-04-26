@@ -5,13 +5,11 @@ import { Link } from 'react-router-dom'
 
 const Navbar = () => {
   return (
-    <div>
         <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-1" >
             <div className="container-fluid">
-                <Link className="nav-link" to={"/"}>
-                    <Button size='large' sx={{color: '#f7d047', fontWeight: '600', fontSize: '20px'}}>
-                            <UsersRound/>UManage</Button>
-                </Link>
+                    <Button size='large' component={Link} to="/" sx={{color: '#f7d047', fontWeight: '600', fontSize: '20px'}}>
+                        <UsersRound/>UManage
+                    </Button>
                 <button className="navbar-toggler" type="button" 
                         data-bs-toggle="collapse" data-bs-target="#navbarNav" 
                         aria-controls="navbarNav" aria-expanded="false" 
@@ -33,7 +31,6 @@ const Navbar = () => {
             </div>
             </div>
         </nav>
-    </div>
   )
 }
 

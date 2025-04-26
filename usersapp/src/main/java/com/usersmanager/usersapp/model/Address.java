@@ -3,6 +3,7 @@ package com.usersmanager.usersapp.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 //Address Entity
 @Entity
@@ -17,11 +18,12 @@ public class Address {
     @Enumerated(EnumType.STRING)
     private AddressType type;
 
+    @Size(max = 255)
     private String address;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference//Serializes the Address and prevents back-reference to User
+    @JsonBackReference //Serializes the Address and prevents back-reference to User
     private User user;
 
     //Constructors, Getters and Setters

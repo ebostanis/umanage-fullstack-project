@@ -200,7 +200,6 @@ spring.jpa.hibernate.ddl-auto=update
 
    ```java
    //User Controller
-   @CrossOrigin("http://localhost:3000")
    @RestController
    @RequestMapping("/api/users")
    public class UserController {
@@ -242,8 +241,9 @@ Postman was used to test and validate all backend API endpoints. It allowed for 
 
 ## Frontend - User Interface
 
-The frontend was built with a focus on simplicity, clarity, and ease of use. React was chosen for its component-based structure, making it easier to organize features like forms, user lists, and navigation.
-Basic features include:
+The frontend was built with a focus on simplicity, clarity, and ease of use. React was chosen for its component-based and single page structure, making it easier to organize features like forms, user lists, and navigation.
+
+**Basic features include:**
 
 1. Home Page:
 
@@ -260,6 +260,36 @@ Basic features include:
 4. List for managing users with pagination and search function:
 
 ![userlist](./doc-pics/user-list.png)
+
+\
+**Production Build Using NGINX**:
+
+1. Configuration file
+
+```properties
+server {
+    listen 80;
+    server_name localhost;
+    root /usr/share/nginx/html;
+    index index.html;
+
+    location / {
+        try_files $uri /index.html;
+    }
+}
+```
+
+2. Create production build
+
+```
+npm run build
+```
+
+3. Serve app using nginx
+
+```
+serve -s build
+```
 
 ## (Optional) Docker
 
@@ -285,31 +315,56 @@ REACT_APP_API_URL=http://localhost:8080
 
 - Backend:
 
-```docker
+```dockerfile
+# Lightweight image for production
 FROM openjdk:24-jdk-slim
+
+# Set the working directory
 WORKDIR /app
+
+# Copy the jar file
 COPY target/usersapp-0.0.1-SNAPSHOT.jar app.jar
+
+# Expose default port
 EXPOSE 8080
+
+# Launch the spring boot app
 ENTRYPOINT ["java", "-jar", "app.jar"]
 ```
 
 - Frontend:
 
-```docker
-FROM node:23-slim
+```dockerfile
+# Build React App
+FROM node:23-slim AS builder
 WORKDIR /app
+
+# Install dependencies
 COPY package*.json ./
 RUN npm install
+
+# Copy source code and build the app
 COPY . .
 RUN npm run build
-RUN npm install -g serve
-EXPOSE 3000
-CMD ["serve", "-s", "build", "-1", "3000"]
+
+# Serve app using NGINX
+FROM nginx:alpine
+
+# Copy custom NGINX config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy React file to NGINX
+COPY --from=builder /app/build /usr/share/nginx/html
+
+#Expose the port
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
 ```
 
 3. Docker-compose:
 
-```docker
+```yml
 services:
   mysql:
     image: mysql:8.0
@@ -350,9 +405,7 @@ services:
     depends_on:
       - backend
     ports:
-      - "3000:3000"
-    working_dir: /app
-    command: [ "npx", "serve", "-s", "build", "-l", "3000" ]
+      - "3000:80"
     environment:
       - REACT_APP_API_URL=http://backend:8080
     networks:
@@ -360,7 +413,6 @@ services:
 
 volumes:
   mysql_data:
-
 
 networks:
   app-network:
@@ -375,4 +427,4 @@ networks:
    Implement a secure login system with JWT-based authentication to restrict access to certain endpoints. This will allow user-specific data to be retrieved and managed safely, setting the foundation for user sessions and roles (e.g., admin vs. standard users).
 
 3. More UI features - tweaks:
-   Add form validation, loading indicators, and user-friendly error messages on the frontend. Improve responsiveness and layout across devices. Future tweaks could also include search, sorting, and filtering options for user lists and addresses to enhance usability.
+   Add loading indicators, and user-friendly error messages. Add mobile compatibility. Future tweaks could also include sorting and filtering options for user lists and addresses.

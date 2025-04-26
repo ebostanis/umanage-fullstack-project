@@ -26,6 +26,12 @@ public class UserServiceImpl implements UserService {
         this.userRepo = userRepo;
     }
 
+
+    /*
+     * Method that saves a new user to the database
+     * Checks for duplicates based on three parameters
+     * Sets the relationship between users and addresses
+     */
     @Override
     public User saveUser(User user) {
         if (userRepo.existsByFirstNameAndLastNameAndBirthdate(user.getFirstName(), user.getLastName(), user.getBirthdate())) {//prevents the creation of duplicate users
@@ -39,11 +45,13 @@ public class UserServiceImpl implements UserService {
         return userRepo.save(user);
     }
 
+    // Delete a user
     @Override
     public void deleteUser(Long id) {
         userRepo.deleteById(id);
     }
 
+    // Find all users with additional search and pagination features
     @Override
     public Page<User> findUsersWithPaginationAndSearch(Integer page, Integer size, String search) {//used for easier implementation of pagination on the frontend
         Pageable pageable = PageRequest.of(page, size);
@@ -53,6 +61,7 @@ public class UserServiceImpl implements UserService {
         return userRepo.findAll(pageable);
     }
 
+    // Find single user
     @Override
     public Optional<User> findUserById(Long id) {
         return userRepo.findById(id);

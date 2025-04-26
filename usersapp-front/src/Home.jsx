@@ -3,18 +3,18 @@ import { Box, Typography, Button, Container, Grid, Card, CardContent } from '@mu
 import { Link } from 'react-router-dom';
 import Background from './asseets/back-image.jpeg'
 import { Contact, UserRoundPlus } from 'lucide-react';
+import { keyframes } from '@emotion/react';
 
 const Home = () => {
 
-  
-  const animationStyle = {
-    animation: 'dropDown 0.8s ease forwards',
-    opacity: 0,
-    '@keyframes dropDown': {
-      '0%': { transform: 'translateY(-20px)', opacity: 0 },
-      '100%': { transform: 'translateY(0)', opacity: 1 },
-    }
-  }
+const dropDown = keyframes`
+0% { transform: translateY(-20px); opacity: 0; },
+100% { transform: translateY(0); opacity: 1; },
+`;
+
+const animationStyle = {
+animation: `${dropDown} 0.8s ease forwards`
+};
 
   return (
 <Box sx={{ minHeight: '100vh', 
@@ -71,8 +71,8 @@ const Home = () => {
                 <Typography variant="body1" sx={{ marginBottom: '1rem', color: 'black'}}>
                   Enter user details
                 </Typography>
-                <Link class="nav-link" to={"/add-user"}>
-                  <Button
+                <Button
+                    component={Link} to="/add-user"
                     variant='contained' 
                     center
                     sx={{
@@ -82,8 +82,7 @@ const Home = () => {
                         backgroundColor: 'dimgrey',
                       }}}>
                     <UserRoundPlus/>
-                  </Button>
-                </Link>
+                </Button>
               </CardContent>
             </Card>
           </Grid>
@@ -103,8 +102,8 @@ const Home = () => {
                 <Typography variant="body1" sx={{ marginBottom: '1rem'}}>
                   Manage users and view user details
                 </Typography>
-                <Link class="nav-link" to={"/users"}>
-                    <Button
+                  <Button
+                      component={Link} to="/users"
                       variant="contained"
                       sx={{
                         backgroundColor: '#1d1d1d',
@@ -113,8 +112,7 @@ const Home = () => {
                           backgroundColor: 'dimgrey',
                         }, justifyContent: 'space-evenly'}}>
                       <Contact/>
-                    </Button>
-                </Link>
+                  </Button>
               </CardContent>
             </Card>
           </Grid>

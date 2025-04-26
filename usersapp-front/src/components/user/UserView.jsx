@@ -5,6 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 
 const api = axios.create({baseURL: process.env.REACT_APP_API_URL});
 
+// Component for viewing single user details
 const UserView = () => {
 
     
@@ -19,9 +20,15 @@ const UserView = () => {
         addresses: []
     })
 
+    // Fetch user by id
     const loadUser = useCallback(async () => {
-      const result = await api.get(`/api/users/user/${id}`);
+      try {
+      const result = await api.get(`/api/users/${id}`);
       setUser(result.data);
+      } catch (error) {
+        console.error("Failed to load user:", error);
+        alert("User not found or failed to load. Please try again.");
+      }
     }, [id]);
 
     useEffect(() => {
@@ -29,7 +36,7 @@ const UserView = () => {
     }, [loadUser]);
 
     
-    //get the addresses from the addresses array
+    // Get the addresses from the addresses array
     const homeAddress = user.addresses.find(addr => addr.type === 'HOME')?.address || '';
     const workAddress = user.addresses.find(addr => addr.type === 'WORK')?.address || '';
 
@@ -65,7 +72,7 @@ const UserView = () => {
           </tr>
         </tbody>
       </table>
-    <Link to={"/users"} type="submit" className="btn btn-outline-danger btn-lg">
+    <Link to={"/users"} className="btn btn-outline-danger btn-lg">
         Back
     </Link>
     </div>

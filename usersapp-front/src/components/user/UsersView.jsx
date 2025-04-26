@@ -5,8 +5,13 @@ import { DeleteIcon, SearchIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const api = axios.create({baseURL: process.env.REACT_APP_API_URL});
+
+/*
+ * Component for viewing the list of users
+ */
 const UsersView = () => {
 
+    // State variables
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState(null);
     const [users, setUsers] = useState([]);
@@ -15,6 +20,7 @@ const UsersView = () => {
     const [totalUsers, setTotalUsers] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
 
+    // Fetch users from the backend
     const loadUsers = useCallback(async () =>{
         try{
             const response = await api.get(`/api/users`, {
@@ -35,9 +41,14 @@ const UsersView = () => {
         loadUsers();
     }, [loadUsers])
 
+    // Handle deletion of user
     const handleDelete = async(id) => {
-        await api.delete(`/api/users/${id}`);
-        loadUsers();
+        try {
+            await api.delete(`/api/users/${id}`);
+            loadUsers();
+        } catch (error) {
+            console.error("Delete failed:", error);
+        }
     }
 
   return (
@@ -74,17 +85,15 @@ const UsersView = () => {
             <tbody className="text-center">
                 {users.map((user, index) => (
                     <tr key={user.id}>
-                        <th scope='row' key={index}>
+                        <th scope='row'>
                             {page * rowsPerPage + index + 1}
                         </th>
                         <td>{user.firstName}</td>
                         <td>{user.lastName}</td>
-                        <td className="mx-2">
-                            <Link class="nav-link" to={`/users/user/${user.id}`}>
-                                <Button sx={{color: "dimgrey"}}> 
-                                    <SearchIcon/> 
-                                </Button>
-                            </Link>
+                        <td className="mx-2">  
+                            <Button component={Link} to={`/users/${user.id}`} sx={{color: "dimgrey"}}> 
+                                <SearchIcon/> 
+                            </Button>
                         </td>
                         <td className="mx-2">
                             <Button 
@@ -101,27 +110,28 @@ const UsersView = () => {
             </tbody>
         </table>
         <TablePagination
-        component="div"
-        count={totalUsers}
-        page={page}
-        onPageChange={(event, newPage) => setPage(newPage)}
-        rowsPerPage={rowsPerPage}
-        onRowsPerPageChange={(event) => {
+            component="div"
+            count={totalUsers}
+            page={page}
+            onPageChange={(event, newPage) => setPage(newPage)}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={(event) => {
           setRowsPerPage(parseInt(event.target.value, 10));
           setPage(0);
         }}
-        rowsPerPageOptions={[5, 10, 20]}
-        sx={{
+            rowsPerPageOptions={[5, 10, 20]}
+            sx={{
             ".MuiTablePagination-displayedRows, .MuiTablePagination-selectLabel": {
                 "margin-top": "1em",
                 "margin-bottom": "1em"
             }
-            }}/>
+            }}
+        />
         <Link
-                to={"/"}
-                type="submit"
-                className="btn btn-outline-danger btn-lg"
-                style={{marginLeft: '100px'}}>
+            to={"/"}
+            type="submit"
+            className="btn btn-outline-danger btn-lg"
+            style={{marginLeft: '100px'}}>
                 Back
         </Link>
         
