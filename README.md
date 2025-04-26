@@ -426,9 +426,5 @@ networks:
 2. Login Function:
    Implement a secure login system with JWT-based authentication to restrict access to certain endpoints. This will allow user-specific data to be retrieved and managed safely, setting the foundation for user sessions and roles (e.g., admin vs. standard users).
 
-<<<<<<< HEAD
 3. More UI features - tweaks:
    Add loading indicators, and user-friendly error messages. Add mobile compatibility. Future tweaks could also include sorting and filtering options for user lists and addresses.
-=======
-3. More UI features - tweaks
->>>>>>> 367c083010ea247d09c59973638fc618bf3e598b
